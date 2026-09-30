@@ -15,15 +15,15 @@ class WeatherModel {
   String locationName;
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
-    var forecast =
-        json["forecast"]["forecastday"] as List<Map<String, dynamic>>;
+    var forecast = json["forecast"]["forecastday"] as List;
     return WeatherModel(
       currentWeather: CurrentWeatherModel.fromJson(json["current"]),
       dailyForcasts: forecast
-          .map((e) => DailyForcastModel.fromJson(e["day"]))
+          .map((e) => DailyForcastModel.fromJson(e))
           .toList(),
-      hourlyForecasts: forecast
-          .map((e) => HourlyForecastModel.fromJson(e["hour"]))
+      hourlyForecasts: (forecast.first["hour"] as List)
+          .cast<Map<String, dynamic>>()
+          .map((e) => HourlyForecastModel.fromJson(e))
           .toList(),
       locationName: json["location"]["name"],
     );

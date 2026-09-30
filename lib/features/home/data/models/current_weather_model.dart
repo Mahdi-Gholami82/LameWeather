@@ -17,9 +17,8 @@ class CurrentWeatherModel {
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
     final condition = json["condition"] as Map<String, dynamic>;
-
     return CurrentWeatherModel(
-      date: DateTime.parse(json["date"] as String),
+      date: DateTime.parse(json["last_updated"] as String),
       tempC: (json["temp_c"] as num).toDouble(),
       humidity: json["humidity"] as int,
       conditionText: condition["text"] as String,

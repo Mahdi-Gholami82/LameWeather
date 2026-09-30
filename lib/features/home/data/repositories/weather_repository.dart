@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:http/http.dart';
 import 'package:lame_weather/features/home/data/models/overall_weather.dart';
 import 'package:lame_weather/features/home/data/sources/weather_data_source.dart';
 

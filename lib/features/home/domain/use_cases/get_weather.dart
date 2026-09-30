@@ -5,9 +5,9 @@ import 'package:lame_weather/features/home/domain/entities/hourly_forecast.dart'
 import 'package:lame_weather/features/home/domain/entities/weather.dart';
 import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
 
-class GetWeather {
+class GetWeatherUseCase {
   WeatherRepository repository;
-  GetWeather({required this.repository});
+  GetWeatherUseCase({required this.repository});
   Future<Weather> execute({required String location}) async {
     final weatherResponse = await repository.getWeather(location: location);
     final currentWeather = weatherResponse.currentWeather;
