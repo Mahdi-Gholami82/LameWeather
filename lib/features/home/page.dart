@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  flex: 1,
+                                  flex: 2,
                                   child: FittedBox(
                                     child: Column(
                                       crossAxisAlignment:
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Flexible(
-                                  flex: 2,
+                                  flex: 3,
                                   child: FittedBox(
                                     child: Padding(
                                       padding: const EdgeInsets.all(20),
@@ -252,32 +252,38 @@ class _HomePageState extends State<HomePage> {
                           sliver: SliverToBoxAdapter(
                             child: SizedBox(
                               height: 400,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
+                              child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 25,
                                   horizontal: 15,
                                 ),
-                                itemCount: weather!.hourlyForecast.length,
-                                itemBuilder: (context, index) {
-                                  final HourlyForecast currentForecast =
-                                      weather.hourlyForecast[index];
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
 
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                    ),
-                                    child: NextHoursPrediction(
-                                      icon: getWeatherIconFromCondition(
-                                        currentForecast.condition.type,
-                                        isDay: isDaytime(currentForecast.date),
+                                  itemCount: weather!.hourlyForecast.length,
+                                  itemBuilder: (context, index) {
+                                    final HourlyForecast currentForecast =
+                                        weather.hourlyForecast[index];
+
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
                                       ),
-                                      time: currentForecast.date,
-                                      temperature: currentForecast.temperature,
-                                      percentage: currentForecast.humidity,
-                                    ),
-                                  );
-                                },
+                                      child: NextHoursPrediction(
+                                        icon: getWeatherIconFromCondition(
+                                          currentForecast.condition.type,
+                                          isDay: isDaytime(
+                                            currentForecast.date,
+                                          ),
+                                        ),
+                                        time: currentForecast.date,
+                                        temperature:
+                                            currentForecast.temperature,
+                                        percentage: currentForecast.humidity,
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -302,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 300,
                               ),
                               childBuilder: () => SliverList.builder(
-                                itemCount: weather!.dailyForecast.length,
+                                itemCount: weather.dailyForecast.length,
                                 itemBuilder: (context, index) {
                                   final DailyForecast currentForecast =
                                       weather.dailyForecast[index];
