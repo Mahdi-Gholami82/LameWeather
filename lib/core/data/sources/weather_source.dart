@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
+import 'package:lame_weather/core/data/models/location.dart';
 import 'package:lame_weather/features/home/data/models/overall_weather.dart';
 
 abstract class WeatherDataSource {
   Future<WeatherModel> getWeather({required String location});
-  Future<List<String>> getLoctionSuggestions({required String search});
+  Future<List<LocationModel>> getLocationSuggestions({required String search});
+  Future<WeatherModel> getWeatherFromPoint({
+    required double latitude,
+    required double longitude,
+  });
 }
 
 class WeatherDataSourceImpl implements WeatherDataSource {
@@ -23,42 +28,53 @@ class WeatherDataSourceImpl implements WeatherDataSource {
     return Uri.https(host, "/$version$path", queryParameters);
   }
 
-  @override
-  Future<WeatherModel> getWeather({required String location}) async {
+  Future<WeatherModel> _getForecast({required String query}) async {
     final response = await client.get(
       _fromPath(
         "/forecast.json",
         queryParameters: {
           "key": _apiKey,
-          "q": location,
+          "q": query,
           "days": "4",
           "aqi": "no",
           "alerts": "no",
         },
       ),
     );
-    client.close();
+
     final json = jsonDecode(response.body);
+
     if (response.statusCode == 200 && json is Map<String, dynamic>) {
       return WeatherModel.fromJson(json);
-    } else {
-      throw Exception(
-        "Failed to load users: \nStatus: ${response.statusCode} Body: ${response.body}",
-      );
     }
+
+    throw Exception(
+      "Failed to load weather:"
+      "\nStatus: ${response.statusCode}"
+      "\nBody: ${response.body}",
+    );
   }
 
   @override
-  Future<List<String>> getLoctionSuggestions({required String search}) async {
+  Future<WeatherModel> getWeather({required String location}) =>
+      _getForecast(query: location);
+
+  @override
+  Future<WeatherModel> getWeatherFromPoint({
+    required double latitude,
+    required double longitude,
+  }) => _getForecast(query: "$latitude,$longitude");
+
+  @override
+  Future<List<LocationModel>> getLocationSuggestions({
+    required String search,
+  }) async {
     final response = await client.get(
       _fromPath("/search.json", queryParameters: {"key": _apiKey, "q": search}),
     );
-    client.close();
-    final json = jsonDecode(response.body);
+    final json = jsonDecode(response.body) as List<dynamic>;
     if (response.statusCode == 200) {
-      if (json case List<Map<String, dynamic>> loctions) {
-        return loctions.map((e) => e["name"] as String).toList();
-      }
+      return json.map((e) => LocationModel.fromJson(e)).toList();
     }
     throw Exception(
       "Failed to load weather: \nStatus: ${response.statusCode} Body: ${response.body}",

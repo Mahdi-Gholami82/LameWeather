@@ -1,3 +1,4 @@
+import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/features/home/domain/entities/daily_forcast.dart';
 import 'package:lame_weather/features/home/domain/entities/hourly_forecast.dart';
 import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
@@ -7,11 +8,13 @@ class CurrentWeather {
     required this.temperature,
     required this.feelsLike,
     required this.condition,
+    required this.date,
   });
 
   final double temperature;
   final double feelsLike;
   final WeatherCondition condition;
+  final DateTime date;
 }
 
 class Weather {
@@ -22,7 +25,7 @@ class Weather {
     required this.hourlyForecast,
   });
 
-  final String location;
+  final Location location;
   final CurrentWeather current;
   final List<DailyForecast> dailyForecast;
   final List<HourlyForecast> hourlyForecast;

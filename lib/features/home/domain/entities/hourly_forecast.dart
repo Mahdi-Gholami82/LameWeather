@@ -2,12 +2,14 @@ import 'package:lame_weather/features/home/domain/entities/weather_condition.dar
 
 class HourlyForecast {
   const HourlyForecast({
-    required this.time,
+    required this.date,
     required this.temperature,
     required this.condition,
+    required this.humidity,
   });
 
-  final DateTime time;
+  final DateTime date;
   final double temperature;
   final WeatherCondition condition;
+  final int humidity;
 }

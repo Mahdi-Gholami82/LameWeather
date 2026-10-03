@@ -5,6 +5,7 @@ plugins {
 }
 
 android {
+    compileSdkVersion = "android-35"
     namespace = "com.example.lame_weather"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

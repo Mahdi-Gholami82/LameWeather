@@ -1,3 +1,5 @@
+import 'package:lame_weather/core/domain/entities/location.dart';
+
 abstract class LocationSuggestionsState {}
 
 class LocationSuggestionsInitial extends LocationSuggestionsState {}
@@ -5,7 +7,7 @@ class LocationSuggestionsInitial extends LocationSuggestionsState {}
 class LocationSuggestionsLoading extends LocationSuggestionsState {}
 
 class LocationSuggestionsLoaded extends LocationSuggestionsState {
-  final List<String> locationSuggestions;
+  final List<Location> locationSuggestions;
   LocationSuggestionsLoaded(this.locationSuggestions);
 }
 

@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DefaultShimmer extends StatelessWidget {
-  final Widget child;
+  final Widget Function() childBuilder;
+  final Widget Function()? sampleBuilder;
   final bool? enableShimmer;
-  const DefaultShimmer({super.key, this.enableShimmer, required this.child});
+  final bool isSliver;
+  const DefaultShimmer({
+    super.key,
+    this.enableShimmer,
+    required this.childBuilder,
+    this.sampleBuilder,
+    this.isSliver = false,
+  });
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -19,36 +27,54 @@ class DefaultShimmer extends StatelessWidget {
         ? Colors.grey.shade100
         : Colors.grey.shade600;
 
+    Widget getShimmer() => Shimmer.fromColors(
+      enabled: true,
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      child: (sampleBuilder ?? childBuilder)(),
+    );
     return enabled
-        ? Shimmer.fromColors(
-            enabled: true,
-            baseColor: baseColor,
-            highlightColor: highlightColor,
-            child: child,
-          )
-        : child;
+        ? isSliver
+              ? SliverToBoxAdapter(child: getShimmer())
+              : getShimmer()
+        : childBuilder();
   }
 }
 
-class ShimmerText extends StatelessWidget {
-  const ShimmerText(
-    this.text, {
+class ShimmerContainer extends StatelessWidget {
+  final double width;
+  final double height;
+  final BorderRadiusGeometry? borderRadius;
+  const ShimmerContainer({
     super.key,
-    this.style,
-    this.enableShimmer,
-    this.maxLines,
-    this.overflow,
-    this.textAlign,
+    required this.width,
+    required this.height,
     this.borderRadius,
   });
+  @override
+  Widget build(BuildContext context) => Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: borderRadius ?? BorderRadius.circular(10),
+    ),
+  );
+}
 
-  final String text;
-  final TextStyle? style;
+class ShimmerText extends StatelessWidget {
+  const ShimmerText({
+    super.key,
+    this.enableShimmer,
+    this.borderRadius,
+    required this.childBuilder,
+    required this.sampleBuilder,
+  });
+
   final bool? enableShimmer;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextAlign? textAlign;
   final BorderRadiusGeometry? borderRadius;
+  final Widget Function() childBuilder;
+  final Widget Function() sampleBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +82,14 @@ class ShimmerText extends StatelessWidget {
         enableShimmer ??
         EnableShimmerInherited.maybeOf(context)?.enableShimmer ??
         false;
-    final textWidget = Text(
-      text,
-      style: style,
-      maxLines: maxLines,
-      overflow: overflow,
-      textAlign: textAlign,
-    );
     var colorScheme = Theme.of(context).colorScheme;
     return Stack(
       children: [
-        Opacity(opacity: enabled ? 0 : 1, child: textWidget),
+        enabled ? sampleBuilder() : childBuilder(),
         if (enabled)
           Positioned.fill(
             child: DefaultShimmer(
-              child: Container(
+              childBuilder: () => Container(
                 decoration: BoxDecoration(
                   color: colorScheme.surface,
                   borderRadius:

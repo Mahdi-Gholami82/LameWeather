@@ -1,37 +1,48 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:lame_weather/core/presentation/weather_icons.dart';
 
 class NextDayPrediction extends StatelessWidget {
-  const NextDayPrediction({super.key});
+  const NextDayPrediction({
+    super.key,
+    required this.dayLabel,
+    required this.humidity,
+    required this.icon,
+    required this.maxTemp,
+    required this.minTemp,
+  });
+
+  final String dayLabel;
+  final int humidity;
+  final IconData icon;
+  final double maxTemp;
+  final double minTemp;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return DefaultTextStyle(
-      style: TextStyle(fontWeight: FontWeight.w500),
+      style: const TextStyle(fontWeight: FontWeight.w500),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         spacing: 10,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(flex: 1, child: FittedBox(child: Text("Today"))),
+          Flexible(flex: 1, child: FittedBox(child: Text(dayLabel))),
           Flexible(
-            flex: 4,
+            flex: 1,
             child: FittedBox(
               child: Row(
                 spacing: 10,
                 children: [
                   Text(
-                    "23",
+                    humidity.toString(),
                     style: TextStyle(color: colorScheme.onSurfaceVariant),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Icon(WeatherIcons.cloudy),
+                    child: Icon(icon),
                   ),
-                  Text("77°"),
-                  Text("66°"),
+                  Text(maxTemp.toString()),
+                  Text(minTemp.toString()),
                 ],
               ),
             ),

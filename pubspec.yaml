@@ -41,6 +41,7 @@ dependencies:
   stream_transform: ^2.1.2
   get_it: ^9.3.0
   shared_preferences: ^2.5.5
+  geolocator: ^14.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
