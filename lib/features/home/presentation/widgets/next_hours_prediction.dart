@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lame_weather/features/home/presentation/widgets/vertical_gradiant_bar.dart';
 
 class NextHoursPrediction extends StatelessWidget {
   const NextHoursPrediction({
@@ -43,31 +44,13 @@ class NextHoursPrediction extends StatelessWidget {
         ),
         SizedBox(height: 20),
         Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final height = constraints.maxHeight;
-              return Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Container(
-                    height: height,
-                    width: 10,
-                    decoration: BoxDecoration(
-                      color: colorScheme.onPrimary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  Container(
-                    height: height * percentage / 100,
-                    width: 10,
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ],
-              );
-            },
+          child: VerticalGradiantBar(
+            background: colorScheme.onPrimary,
+            foreground: colorScheme.primary,
+            width: 12,
+            radius: Radius.circular(10),
+            foregroundFill: percentage / 100,
+            fillOffset: 0.2,
           ),
         ),
         Text(percentage.toString()),
