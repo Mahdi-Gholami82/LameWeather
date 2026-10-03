@@ -80,25 +80,20 @@ class _HomePageState extends State<HomePage> {
             ? weatherState.weather
             : null;
         bool loading = weather == null;
-        return Scaffold(
-          appBar: AppBar(backgroundColor: theme.colorScheme.primary),
-          body: SafeArea(
-            child: RefreshIndicator(
-              notificationPredicate: (ScrollNotification notification) {
-                return notification.depth == 0;
-              },
-              onRefresh: () async {},
-              child: EnableShimmerInherited(
-                enableShimmer: loading,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                    dragDevices: {
-                      PointerDeviceKind.touch,
-                      PointerDeviceKind.mouse,
-                    },
-                  ),
+        return ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+          ),
+          child: Scaffold(
+            appBar: AppBar(backgroundColor: theme.colorScheme.primary),
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {},
+                child: EnableShimmerInherited(
+                  enableShimmer: loading,
                   child: CustomScrollView(
                     controller: scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
                       SliverPadding(
                         padding: EdgeInsetsGeometry.all(50),
