@@ -239,46 +239,43 @@ class _HomePageState extends State<HomePage> {
                           horizontal: 20,
                           vertical: 10,
                         ),
-                        sliver: DecoratedSliver(
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainer,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          sliver: SliverToBoxAdapter(
-                            child: SizedBox(
+                        sliver: SliverToBoxAdapter(
+                          child: DefaultShimmer(
+                            sampleBuilder: () => ShimmerContainer(
+                              width: double.infinity,
+                              height: 300,
+                            ),
+                            childBuilder: () => Container(
                               height: 400,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 25,
-                                  horizontal: 15,
-                                ),
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-
-                                  itemCount: weather!.hourlyForecast.length,
-                                  itemBuilder: (context, index) {
-                                    final HourlyForecast currentForecast =
-                                        weather.hourlyForecast[index];
-
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 5,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 25,
+                                horizontal: 15,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.surfaceContainer,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: weather!.hourlyForecast.length,
+                                itemBuilder: (context, index) {
+                                  final HourlyForecast currentForecast =
+                                      weather.hourlyForecast[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                    ),
+                                    child: NextHoursPrediction(
+                                      icon: getWeatherIconFromCondition(
+                                        currentForecast.condition.type,
+                                        isDay: isDaytime(currentForecast.date),
                                       ),
-                                      child: NextHoursPrediction(
-                                        icon: getWeatherIconFromCondition(
-                                          currentForecast.condition.type,
-                                          isDay: isDaytime(
-                                            currentForecast.date,
-                                          ),
-                                        ),
-                                        time: currentForecast.date,
-                                        temperature:
-                                            currentForecast.temperature,
-                                        percentage: currentForecast.humidity,
-                                      ),
-                                    );
-                                  },
-                                ),
+                                      time: currentForecast.date,
+                                      temperature: currentForecast.temperature,
+                                      percentage: currentForecast.humidity,
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -295,15 +292,15 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           sliver: SliverPadding(
-                            padding: const EdgeInsets.all(25),
+                            padding: EdgeInsets.all(loading ? 0 : 25),
                             sliver: DefaultShimmer(
                               isSliver: true,
                               sampleBuilder: () => const ShimmerContainer(
                                 height: 400,
-                                width: 300,
+                                width: double.infinity,
                               ),
                               childBuilder: () => SliverList.builder(
-                                itemCount: weather.dailyForecast.length,
+                                itemCount: weather!.dailyForecast.length,
                                 itemBuilder: (context, index) {
                                   final DailyForecast currentForecast =
                                       weather.dailyForecast[index];

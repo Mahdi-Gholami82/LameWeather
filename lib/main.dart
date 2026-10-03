@@ -9,6 +9,7 @@ import 'package:lame_weather/core/data/repositories/preferances_repository.dart'
 import 'package:lame_weather/core/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
 import 'package:lame_weather/core/data/sources/weather_source.dart';
+import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/features/location/domain/use_cases/get_location_suggestions.dart';
 import 'package:lame_weather/features/home/domain/use_cases/get_weather.dart';
 import 'package:lame_weather/features/home/page.dart';
@@ -30,6 +31,12 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<PreferencesRepository>(
     () => PreferencesRepositoryImpl(getIt()),
   );
+  getIt<PreferencesRepository>().saveLocations([
+    Location(
+      name: "What",
+      point: Point(latitude: -3.3059042358398343, longitude: 52.07636008468382),
+    ),
+  ]);
 
   getIt.registerSingleton<Client>(
     Client(),

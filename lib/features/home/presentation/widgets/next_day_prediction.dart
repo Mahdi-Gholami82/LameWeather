@@ -38,7 +38,10 @@ class NextDayPrediction extends StatelessWidget {
                     style: TextStyle(color: colorScheme.onSurfaceVariant),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
                     child: Icon(icon),
                   ),
                   Text(maxTemp.toString()),

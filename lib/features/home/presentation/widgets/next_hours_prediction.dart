@@ -28,29 +28,46 @@ class NextHoursPrediction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    var maxbarSize = 90;
-    var barSize = (maxbarSize / 100) * percentage;
     return Column(
       spacing: 5,
       children: [
-        Text(formatTime(time)),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(icon, size: 30),
-        ),
-        Text("$temperature°"),
-        Expanded(
-          flex: 4,
-          child: Padding(
-            padding: EdgeInsets.only(top: maxbarSize - barSize),
-            child: Container(
-              height: barSize,
-              width: 10,
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
+        Column(
+          children: [
+            Text(formatTime(time)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(icon, size: 30),
             ),
+            Text("$temperature°"),
+          ],
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final height = constraints.maxHeight;
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    height: height,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  Container(
+                    height: height * percentage / 100,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
         Text(percentage.toString()),
