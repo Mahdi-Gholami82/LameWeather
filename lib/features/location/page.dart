@@ -29,10 +29,10 @@ class _LocationsState extends State<Locations> {
   }
 
   void _loadPointAndPop(BuildContext context, {required Point point}) {
+    Navigator.of(context).pop();
     BlocProvider.of<WeatherBloc>(
       context,
     ).add(GetWeatherFromPointEvent(point: point));
-    Navigator.of(context).pop();
   }
 
   @override

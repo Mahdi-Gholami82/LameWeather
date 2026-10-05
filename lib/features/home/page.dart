@@ -87,12 +87,11 @@ class _HomePageState extends State<HomePage> {
             }
         }
       },
-      buildWhen: (previous, current) => current is WeatherLoaded,
       builder: (context, weatherState) {
         Weather? weather = weatherState is WeatherLoaded
             ? weatherState.weather
             : null;
-        bool loading = weather == null;
+        bool loading = weatherState is! WeatherLoaded;
         return ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(
             dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
