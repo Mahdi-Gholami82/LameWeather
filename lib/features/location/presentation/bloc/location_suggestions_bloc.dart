@@ -29,7 +29,6 @@ class LocationSuggestionsBloc
 
           emit(LocationSuggestionsLoaded(result));
         } on Exception catch (e) {
-          debugPrint(e.toString());
           emit(LocationSuggestionsError(e.toString()));
         }
       },

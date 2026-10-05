@@ -161,13 +161,17 @@ class _LocationsState extends State<Locations> {
               delegate: SliverChildBuilderDelegate((context, index) {
                 var location = locations[index];
                 var point = location.point;
-                return ListTile(
-                  leading: Icon(Icons.location_city_rounded),
-                  title: Text(location.name),
-                  subtitle: Text("${point.latitude}, ${point.longitude}"),
-                  onTap: () {
-                    _loadPointAndPop(context, point: point);
-                  },
+                String pointString = "${point.latitude}, ${point.longitude}";
+                return Dismissible(
+                  key: ValueKey(location.name + pointString),
+                  child: ListTile(
+                    leading: Icon(Icons.location_city_rounded),
+                    title: Text(location.name),
+                    subtitle: Text(pointString),
+                    onTap: () {
+                      _loadPointAndPop(context, point: point);
+                    },
+                  ),
                 );
               }, childCount: locations.length),
             ),

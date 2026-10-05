@@ -14,6 +14,7 @@ import 'package:lame_weather/features/home/domain/entities/weather.dart';
 import 'package:lame_weather/features/home/presentation/bloc/weather_bloc.dart';
 import 'package:lame_weather/features/home/presentation/bloc/weather_state.dart';
 import 'package:lame_weather/features/home/presentation/weather_icons_mapper.dart';
+import 'package:lame_weather/features/home/presentation/widgets/custom_scroll_bar.dart';
 import 'package:lame_weather/features/home/presentation/widgets/next_day_prediction.dart';
 import 'package:lame_weather/features/home/presentation/widgets/next_hours_prediction.dart';
 import 'package:lame_weather/features/home/utils/is_day_time.dart';
@@ -265,41 +266,71 @@ class _HomePageState extends State<HomePage> {
                           child: DefaultShimmer(
                             sampleBuilder: () => ShimmerContainer(
                               width: double.infinity,
-                              height: 300,
+                              height: 350,
                             ),
-                            childBuilder: () => Container(
-                              height: 400,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 25,
-                                horizontal: 15,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colorScheme.surfaceContainer,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: weather!.hourlyForecast.length,
-                                itemBuilder: (context, index) {
-                                  final HourlyForecast currentForecast =
-                                      weather.hourlyForecast[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                    ),
-                                    child: NextHoursPrediction(
-                                      icon: getWeatherIconFromCondition(
-                                        currentForecast.condition.type,
-                                        isDay: isDaytime(currentForecast.date),
+                            childBuilder: () {
+                              var dailyPredictionListController =
+                                  ScrollController();
+                              return Container(
+                                height: 350,
+                                padding: const EdgeInsets.only(
+                                  top: 25,
+                                  right: 15,
+                                  left: 15,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.surfaceContainer,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView.builder(
+                                        controller:
+                                            dailyPredictionListController,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount:
+                                            weather!.hourlyForecast.length,
+                                        itemBuilder: (context, index) {
+                                          final HourlyForecast currentForecast =
+                                              weather.hourlyForecast[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 5,
+                                            ),
+                                            child: NextHoursPrediction(
+                                              icon: getWeatherIconFromCondition(
+                                                currentForecast.condition.type,
+                                                isDay: isDaytime(
+                                                  currentForecast.date,
+                                                ),
+                                              ),
+                                              time: currentForecast.date,
+                                              temperature:
+                                                  currentForecast.temperature,
+                                              percentage:
+                                                  currentForecast.humidity,
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      time: currentForecast.date,
-                                      temperature: currentForecast.temperature,
-                                      percentage: currentForecast.humidity,
                                     ),
-                                  );
-                                },
-                              ),
-                            ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                        vertical: 15,
+                                      ),
+                                      child: CustomScrollBar(
+                                        scrollController:
+                                            dailyPredictionListController,
+                                        color:
+                                            colorScheme.surfaceContainerHighest,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
