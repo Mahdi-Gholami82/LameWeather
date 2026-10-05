@@ -22,13 +22,12 @@ class NextDayPrediction extends StatelessWidget {
     return DefaultTextStyle(
       style: const TextStyle(fontWeight: FontWeight.w500),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         spacing: 10,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(flex: 1, child: FittedBox(child: Text(dayLabel))),
           Flexible(
-            flex: 1,
+            flex: 5,
             child: FittedBox(
               child: Row(
                 spacing: 10,
