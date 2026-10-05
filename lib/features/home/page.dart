@@ -142,42 +142,54 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
-                                            Text.rich(
-                                              TextSpan(
-                                                children: [
-                                                  WidgetSpan(
-                                                    child: ShimmerText(
-                                                      childBuilder: () => Text(
-                                                        weather!.location.name,
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                  LocationSelectorPage.route,
+                                                );
+                                              },
+                                              child: Text.rich(
+                                                TextSpan(
+                                                  children: [
+                                                    WidgetSpan(
+                                                      child: ShimmerText(
+                                                        childBuilder: () =>
+                                                            Text(
+                                                              weather!
+                                                                  .location
+                                                                  .name,
+                                                            ),
+                                                        sampleBuilder: () =>
+                                                            Text(
+                                                              "***********",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    colorScheme
+                                                                        .surface,
+                                                              ),
+                                                            ),
                                                       ),
-                                                      sampleBuilder: () => Text(
-                                                        "***********",
-                                                        style: TextStyle(
+                                                    ),
+                                                    if (!loading)
+                                                      WidgetSpan(
+                                                        alignment:
+                                                            PlaceholderAlignment
+                                                                .middle,
+                                                        child: Icon(
+                                                          Icons
+                                                              .location_on_outlined,
+                                                          size: 18,
                                                           color: colorScheme
-                                                              .surface,
+                                                              .onSurfaceVariant,
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  if (!loading)
-                                                    WidgetSpan(
-                                                      alignment:
-                                                          PlaceholderAlignment
-                                                              .middle,
-                                                      child: Icon(
-                                                        Icons
-                                                            .location_on_outlined,
-                                                        size: 18,
-                                                        color: colorScheme
-                                                            .onSurfaceVariant,
-                                                      ),
-                                                    ),
-                                                ],
+                                                  ],
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppTextStyles.location,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: AppTextStyles.location,
                                             ),
                                             ShimmerText(
                                               childBuilder: () => Text(
