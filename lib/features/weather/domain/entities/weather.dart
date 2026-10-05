@@ -1,7 +1,7 @@
 import 'package:lame_weather/core/domain/entities/location.dart';
-import 'package:lame_weather/features/home/domain/entities/daily_forcast.dart';
-import 'package:lame_weather/features/home/domain/entities/hourly_forecast.dart';
-import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
+import 'package:lame_weather/features/weather/domain/entities/daily_forcast.dart';
+import 'package:lame_weather/features/weather/domain/entities/hourly_forecast.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather_condition.dart';
 
 class CurrentWeather {
   const CurrentWeather({

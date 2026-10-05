@@ -1,6 +1,6 @@
 import 'package:lame_weather/core/domain/entities/location.dart';
-import 'package:lame_weather/core/data/repositories/weather_repository.dart';
-import 'package:lame_weather/features/home/domain/entities/weather.dart';
+import 'package:lame_weather/features/weather/data/repositories/weather_repository.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather.dart';
 
 class GetWeatherUseCase {
   WeatherRepository repository;

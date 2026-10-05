@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lame_weather/core/presentation/weather_icons.dart';
-import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather_condition.dart';
 
 IconData getWeatherIconFromCondition(
   WeatherConditionType condition, {

@@ -1,4 +1,4 @@
-import 'package:lame_weather/core/data/repositories/weather_repository.dart';
+import 'package:lame_weather/features/weather/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/domain/entities/location.dart';
 
 class GetLocationSuggestionsUseCase {

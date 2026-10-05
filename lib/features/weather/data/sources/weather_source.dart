@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:lame_weather/core/data/models/location.dart';
-import 'package:lame_weather/features/home/data/models/weather_model.dart';
+import 'package:lame_weather/features/weather/data/models/weather_model.dart';
 
 abstract class WeatherDataSource {
   Future<WeatherModel> getWeather({required String location});

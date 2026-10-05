@@ -1,6 +1,6 @@
-import 'package:lame_weather/features/home/data/models/daily_forcast_model.dart';
-import 'package:lame_weather/features/home/data/models/hourly_forecast_model.dart';
-import 'package:lame_weather/features/home/data/models/current_weather_model.dart';
+import 'package:lame_weather/features/weather/data/models/daily_forcast_model.dart';
+import 'package:lame_weather/features/weather/data/models/hourly_forecast_model.dart';
+import 'package:lame_weather/features/weather/data/models/current_weather_model.dart';
 import 'package:lame_weather/core/data/models/location.dart';
 
 class WeatherModel {

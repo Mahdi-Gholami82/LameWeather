@@ -1,4 +1,4 @@
-import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather_condition.dart';
 
 WeatherConditionType mapWeatherApiCode(int code) {
   return switch (code) {

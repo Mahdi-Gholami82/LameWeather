@@ -1,4 +1,4 @@
-import 'package:lame_weather/features/home/domain/entities/weather.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather.dart';
 
 abstract class WeatherState {}
 

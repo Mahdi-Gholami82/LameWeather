@@ -1,11 +1,11 @@
 import 'package:lame_weather/core/domain/entities/location.dart';
-import 'package:lame_weather/features/home/data/mappers/weather_condition_mapper.dart';
-import 'package:lame_weather/features/home/data/models/weather_model.dart';
-import 'package:lame_weather/core/data/sources/weather_source.dart';
-import 'package:lame_weather/features/home/domain/entities/daily_forcast.dart';
-import 'package:lame_weather/features/home/domain/entities/hourly_forecast.dart';
-import 'package:lame_weather/features/home/domain/entities/weather.dart';
-import 'package:lame_weather/features/home/domain/entities/weather_condition.dart';
+import 'package:lame_weather/features/weather/data/mappers/weather_condition_mapper.dart';
+import 'package:lame_weather/features/weather/data/models/weather_model.dart';
+import 'package:lame_weather/features/weather/data/sources/weather_source.dart';
+import 'package:lame_weather/features/weather/domain/entities/daily_forcast.dart';
+import 'package:lame_weather/features/weather/domain/entities/hourly_forecast.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather.dart';
+import 'package:lame_weather/features/weather/domain/entities/weather_condition.dart';
 
 Weather _fromWeatherModel(WeatherModel weatherModel) {
   final currentWeather = weatherModel.currentWeather;

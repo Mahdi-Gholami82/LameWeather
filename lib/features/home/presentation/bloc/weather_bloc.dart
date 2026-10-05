@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lame_weather/core/domain/entities/location.dart';
-import 'package:lame_weather/features/home/domain/use_cases/get_weather.dart';
+import 'package:lame_weather/features/weather/domain/use_cases/get_weather.dart';
 import 'package:lame_weather/features/home/presentation/bloc/weather_state.dart';
 
 sealed class WeatherEvent {}
