@@ -28,23 +28,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> getWeather(Location location) async {
+    BlocProvider.of<WeatherBloc>(
+      context,
+    ).add(GetWeatherFromPointEvent(point: location.point));
+  }
+
+  void pushToLocations(BuildContext context) {
+    Navigator.of(context).pushNamed(Locations.route);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      List<Location> savedLocations = GetIt.instance<PreferencesRepository>()
+          .getSavedLocations();
+      if (savedLocations.isEmpty) {
+        pushToLocations(context);
+      } else {
+        getWeather(savedLocations.first);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Future<void> getWeather(Location location) async {
-      BlocProvider.of<WeatherBloc>(
-        context,
-      ).add(GetWeatherFromPointEvent(location: location));
-    }
-
     var scrollController = ScrollController();
 
     var theme = Theme.of(context);
     var colorScheme = theme.colorScheme;
+
     return BlocConsumer<WeatherBloc, WeatherState>(
       listener: (BuildContext context, WeatherState weatherState) {
         switch (weatherState) {
           case WeatherError error:
             {
+              pushToLocations(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -55,27 +75,19 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             }
+          case WeatherLoaded loaded:
+            {
+              var prefs = GetIt.instance<PreferencesRepository>();
+              Location location = loaded.weather.location;
+              List<Location> savedLocations = prefs.getSavedLocations();
+              if (!savedLocations.contains(location)) {
+                prefs.saveLocations(savedLocations..add(location));
+              }
+            }
         }
       },
       buildWhen: (previous, current) => current is WeatherLoaded,
       builder: (context, weatherState) {
-        switch (weatherState) {
-          case WeatherInitial _ || WeatherError _:
-            {
-              List<Location> savedLocations =
-                  GetIt.instance<PreferencesRepository>().getSavedLocations();
-              if (savedLocations.isEmpty) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  var navigator = Navigator.of(context);
-                  navigator.pushNamed(LocationSelectorPage.route);
-                });
-              } else {
-                getWeather(savedLocations.first);
-              }
-            }
-          case WeatherLoaded _:
-          case WeatherLoading _:
-        }
         Weather? weather = weatherState is WeatherLoaded
             ? weatherState.weather
             : null;
@@ -146,9 +158,7 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             TextButton(
                                               onPressed: () {
-                                                Navigator.of(context).pushNamed(
-                                                  LocationSelectorPage.route,
-                                                );
+                                                pushToLocations(context);
                                               },
                                               child: Text.rich(
                                                 TextSpan(

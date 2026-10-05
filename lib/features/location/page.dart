@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
 import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/features/home/presentation/bloc/weather_bloc.dart';
+import 'package:lame_weather/features/home/presentation/bloc/weather_state.dart';
 import 'package:lame_weather/features/location/presentation/bloc/location_point_bloc.dart';
-import 'package:lame_weather/features/location/presentation/bloc/location_selection_state.dart';
+import 'package:lame_weather/features/location/presentation/bloc/location_point_state.dart';
 import 'package:lame_weather/features/location/presentation/bloc/location_suggestions_bloc.dart';
 import 'package:lame_weather/features/location/presentation/bloc/location_suggestions_state.dart';
 
-class LocationSelectorPage extends StatefulWidget {
-  const LocationSelectorPage({super.key});
+class Locations extends StatefulWidget {
+  const Locations({super.key});
   static const String route = "/locations";
 
   @override
-  State<LocationSelectorPage> createState() => _LocationSelectorPageState();
+  State<Locations> createState() => _LocationsState();
 }
 
-class _LocationSelectorPageState extends State<LocationSelectorPage> {
+class _LocationsState extends State<Locations> {
   var searchController = SearchController();
 
   void _triggerSuggestionRebuild() {
@@ -25,99 +28,151 @@ class _LocationSelectorPageState extends State<LocationSelectorPage> {
     searchController.text = previousText;
   }
 
+  void _loadPointAndPop(BuildContext context, {required Point point}) {
+    BlocProvider.of<WeatherBloc>(
+      context,
+    ).add(GetWeatherFromPointEvent(point: point));
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Location> locations = GetIt.instance<PreferencesRepository>()
+        .getSavedLocations();
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 10,
-            left: 10,
-            right: 10,
-            child: BlocBuilder<LocationBloc, LocationSelectionState>(
-              builder: (context, final locationPointState) {
-                List<Location> suggestions = [];
-
-                return BlocBuilder<
-                  LocationSuggestionsBloc,
-                  LocationSuggestionsState
-                >(
-                  builder: (context, final locationSuggestionsState) {
-                    if (locationSuggestionsState
-                        case LocationSelectionLoaded locationPointLoaded) {
-                    } else if (locationSuggestionsState
-                        case LocationSuggestionsLoaded loaded) {
-                      suggestions = loaded.locationSuggestions;
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _triggerSuggestionRebuild();
-                      });
-                    }
-                    if (locationSuggestionsState
-                        case LocationSuggestionsError error) {}
-                    return SearchAnchor(
-                      searchController: searchController,
-                      viewOnChanged: (value) {
-                        final query = value.trim();
-                        var locationSuggestionsBloc =
-                            BlocProvider.of<LocationSuggestionsBloc>(context);
-                        if (query.isNotEmpty) {
-                          locationSuggestionsBloc.add(
-                            GetLocationSuggestions(query: query),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.all(10),
+              sliver: SliverFloatingHeader(
+                child: BlocConsumer<LocationBloc, LocationPointState>(
+                  listener: (context, locationPointState) {
+                    switch (locationPointState) {
+                      case LocationPointLoaded loaded:
+                        {
+                          _loadPointAndPop(context, point: loaded.point);
+                        }
+                      case LocationPointError error:
+                        {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(error.message)),
                           );
-                        } else {
-                          locationSuggestionsBloc.add(SetEmptySuggestion());
+                        }
+                    }
+                  },
+                  builder: (context, final locationPointState) {
+                    List<Location> suggestions = [];
+                    return BlocConsumer<
+                      LocationSuggestionsBloc,
+                      LocationSuggestionsState
+                    >(
+                      listener: (context, state) {
+                        switch (state) {
+                          case LocationSuggestionsLoaded loaded:
+                            {
+                              suggestions = loaded.locationSuggestions;
+                              _triggerSuggestionRebuild();
+                            }
+                          case LocationSuggestionsError error:
+                            {
+                              debugPrint(
+                                "LocationSuggestionsError : ${error.message}",
+                              );
+                            }
+                          default:
+                            break;
                         }
                       },
-                      builder: (context, controller) {
-                        return SearchBar(
-                          controller: controller,
-                          onTap: () => controller.openView(),
-                          hintText: "Search locations...",
-                          leading: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.arrow_back_outlined),
-                          ),
-                          trailing: [
-                            IconButton(
-                              onPressed: () {
-                                context.read<LocationBloc>().add(
-                                  GetLocationSelectionEvent(),
+                      builder: (context, final locationSuggestionsState) {
+                        return SearchAnchor(
+                          searchController: searchController,
+                          viewOnChanged: (value) {
+                            final query = value.trim();
+                            var locationSuggestionsBloc =
+                                BlocProvider.of<LocationSuggestionsBloc>(
+                                  context,
                                 );
-                              },
-                              icon: const Icon(Icons.location_on),
-                            ),
-                          ],
-                        );
-                      },
-                      suggestionsBuilder: (context, controller) {
-                        return suggestions
-                            .map(
-                              (location) => ListTile(
-                                title: Text(
-                                  location.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                onTap: () {
-                                  controller.closeView(location.name);
-                                  BlocProvider.of<WeatherBloc>(context).add(
-                                    GetWeatherFromPointEvent(
-                                      location: location,
-                                    ),
-                                  );
-                                  Navigator.of(context).pop();
+                            if (query.isNotEmpty) {
+                              locationSuggestionsBloc.add(
+                                GetLocationSuggestions(query: query),
+                              );
+                            } else {
+                              locationSuggestionsBloc.add(SetEmptySuggestion());
+                            }
+                          },
+                          builder: (context, controller) {
+                            return SearchBar(
+                              controller: controller,
+                              onTap: () => controller.openView(),
+                              hintText: "Search locations...",
+                              leading: IconButton(
+                                onPressed: () {
+                                  if (BlocProvider.of<WeatherBloc>(
+                                        context,
+                                      ).state
+                                      is WeatherLoaded) {
+                                    Navigator.of(context).pop();
+                                  }
                                 },
+                                icon: Icon(Icons.arrow_back_outlined),
                               ),
-                            )
-                            .toList();
+                              trailing: [
+                                IconButton(
+                                  onPressed: () {
+                                    context.read<LocationBloc>().add(
+                                      GetLocationPointEvent(),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.location_on),
+                                ),
+                              ],
+                            );
+                          },
+                          suggestionsBuilder: (context, controller) {
+                            return suggestions
+                                .map(
+                                  (location) => ListTile(
+                                    title: Text(
+                                      location.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    onTap: () {
+                                      controller.closeView(location.name);
+                                      _loadPointAndPop(
+                                        context,
+                                        point: location.point,
+                                      );
+                                    },
+                                  ),
+                                )
+                                .toList();
+                          },
+                        );
                       },
                     );
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-        ],
+            SliverToBoxAdapter(child: SizedBox(height: 10)),
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                var location = locations[index];
+                var point = location.point;
+                return ListTile(
+                  leading: Icon(Icons.location_city_rounded),
+                  title: Text(location.name),
+                  subtitle: Text("${point.latitude}, ${point.longitude}"),
+                  onTap: () {
+                    _loadPointAndPop(context, point: point);
+                  },
+                );
+              }, childCount: locations.length),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -12,8 +12,7 @@ class LocationRepositoryImpl implements LocationRepository {
 
   @override
   Future<Point> getCurrentLocation() async {
-    final position = await dataSource.getCurrentPosition();
-
-    return Point(latitude: position.latitude, longitude: position.longitude);
+    final point = await dataSource.getCurrentLocation();
+    return Point(latitude: point.latitude, longitude: point.longitude);
   }
 }

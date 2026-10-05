@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,7 +8,6 @@ import 'package:lame_weather/core/data/repositories/preferances_repository.dart'
 import 'package:lame_weather/core/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
 import 'package:lame_weather/core/data/sources/weather_source.dart';
-import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/features/location/domain/use_cases/get_location_suggestions.dart';
 import 'package:lame_weather/features/home/domain/use_cases/get_weather.dart';
 import 'package:lame_weather/features/home/page.dart';
@@ -31,13 +29,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<PreferencesRepository>(
     () => PreferencesRepositoryImpl(getIt()),
   );
-  getIt<PreferencesRepository>().saveLocations([
-    Location(
-      name: "What",
-      point: Point(latitude: -3.3059042358398343, longitude: 52.07636008468382),
-    ),
-  ]);
-
+  // if (kDebugMode) {
+  //   await prefs.clear();
+  // }
   getIt.registerSingleton<Client>(
     Client(),
     dispose: (client) => client.close(),
@@ -48,7 +42,9 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<WeatherRepository>(
     () => WeatherRepositoryImpl(dataSource: getIt<WeatherDataSource>()),
   );
-  getIt.registerLazySingleton<LocationDataSource>(() => LocationDataSource());
+  getIt.registerLazySingleton<LocationDataSource>(
+    () => LocationDataSourceImpl(),
+  );
   getIt.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(getIt<LocationDataSource>()),
   );
@@ -100,9 +96,7 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
         ),
-        routes: {
-          LocationSelectorPage.route: (context) => LocationSelectorPage(),
-        },
+        routes: {Locations.route: (context) => Locations()},
         home: HomePage(),
       ),
     );

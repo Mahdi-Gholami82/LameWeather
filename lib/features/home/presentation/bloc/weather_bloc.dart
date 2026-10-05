@@ -11,8 +11,8 @@ class GetWeatherEvent extends WeatherEvent {
 }
 
 class GetWeatherFromPointEvent extends WeatherEvent {
-  GetWeatherFromPointEvent({required this.location});
-  Location location;
+  GetWeatherFromPointEvent({required this.point});
+  Point point;
 }
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
@@ -24,7 +24,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }) : super(WeatherInitial()) {
     on<GetWeatherEvent>((event, emit) async {
       try {
-        emit(WeatherLoading(location: event.location));
+        emit(WeatherLoading());
         var result = await getWeatherUseCase.execute(
           locationName: event.location.name,
         );
@@ -35,9 +35,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     });
     on<GetWeatherFromPointEvent>((event, emit) async {
       try {
-        emit(WeatherLoading(location: event.location));
+        emit(WeatherLoading());
         var result = await getWeatherFromPointUseCase.execute(
-          locationPoint: event.location.point,
+          locationPoint: event.point,
         );
         emit(WeatherLoaded(result));
       } on Exception catch (e) {
