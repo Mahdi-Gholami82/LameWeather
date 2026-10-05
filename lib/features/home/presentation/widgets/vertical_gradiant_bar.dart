@@ -21,6 +21,7 @@ class VerticalGradiantBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
+      size: Size.fromWidth(width),
       painter: VerticalGradiantBarPainter(
         background: background,
         foreground: foreground,

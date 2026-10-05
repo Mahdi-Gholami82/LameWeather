@@ -97,7 +97,13 @@ class _HomePageState extends State<HomePage> {
             dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
           ),
           child: Scaffold(
-            appBar: AppBar(backgroundColor: theme.colorScheme.primary),
+            appBar: AppBar(
+              title: Text(
+                "Lame Weather",
+                selectionColor: theme.colorScheme.onPrimary,
+              ),
+              backgroundColor: theme.colorScheme.primary,
+            ),
             body: SafeArea(
               child: RefreshIndicator(
                 onRefresh: () async {},
@@ -265,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                           child: DefaultShimmer(
                             sampleBuilder: () => ShimmerContainer(
                               width: double.infinity,
-                              height: 350,
+                              height: 300,
                             ),
                             childBuilder: () {
                               var dailyPredictionListController =
@@ -348,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                             sliver: DefaultShimmer(
                               isSliver: true,
                               sampleBuilder: () => const ShimmerContainer(
-                                height: 400,
+                                height: 150,
                                 width: double.infinity,
                               ),
                               childBuilder: () => SliverList.builder(

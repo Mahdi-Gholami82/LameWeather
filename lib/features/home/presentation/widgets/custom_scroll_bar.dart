@@ -59,17 +59,14 @@ class _CustomScrollBarState extends State<CustomScrollBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height,
-      width: double.infinity,
-      child: CustomPaint(
-        painter: CustomScrollBarPainter(
-          scrollOffset: offset,
-          color: widget.color ?? Theme.of(context).colorScheme.primaryContainer,
-          radius: widget.radius,
-          barHeight: widget.height,
-          barWidth: widget.width,
-        ),
+    return CustomPaint(
+      size: Size.fromHeight(widget.height),
+      painter: CustomScrollBarPainter(
+        scrollOffset: offset,
+        color: widget.color ?? Theme.of(context).colorScheme.primaryContainer,
+        radius: widget.radius,
+        barHeight: widget.height,
+        barWidth: widget.width,
       ),
     );
   }
