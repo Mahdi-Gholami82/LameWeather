@@ -81,9 +81,8 @@ class _HomePageState extends State<HomePage> {
               var prefs = GetIt.instance<PreferencesRepository>();
               Location location = loaded.weather.location;
               List<Location> savedLocations = prefs.getSavedLocations();
-              if (!savedLocations.contains(location)) {
-                prefs.saveLocations(savedLocations..add(location));
-              }
+              savedLocations.remove(location);
+              prefs.saveLocations(savedLocations..insert(0, location));
             }
         }
       },
