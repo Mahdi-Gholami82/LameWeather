@@ -29,7 +29,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Completer? _getWeatherCompleter;
   Future<void> getWeather(Location location) async {
+    _getWeatherCompleter = Completer();
     BlocProvider.of<WeatherBloc>(
       context,
     ).add(GetWeatherFromPointEvent(point: location.point));
@@ -83,6 +85,9 @@ class _HomePageState extends State<HomePage> {
               List<Location> savedLocations = prefs.getSavedLocations();
               savedLocations.remove(location);
               prefs.saveLocations(savedLocations..insert(0, location));
+              if (!(_getWeatherCompleter?.isCompleted ?? true)) {
+                _getWeatherCompleter?.complete(null);
+              }
             }
         }
       },
@@ -105,7 +110,12 @@ class _HomePageState extends State<HomePage> {
             ),
             body: SafeArea(
               child: RefreshIndicator(
-                onRefresh: () async {},
+                onRefresh: () async {
+                  if (weatherState case WeatherLoaded loaded) {
+                    getWeather(loaded.weather.location);
+                    await _getWeatherCompleter?.future;
+                  }
+                },
                 child: EnableShimmerInherited(
                   enableShimmer: loading,
                   child: CustomScrollView(

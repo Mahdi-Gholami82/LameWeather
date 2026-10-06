@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lame_weather/core/presentation/weather_icons.dart';
 import 'package:lame_weather/features/home/presentation/widgets/vertical_gradiant_bar.dart';
 
 class NextHoursPrediction extends StatelessWidget {

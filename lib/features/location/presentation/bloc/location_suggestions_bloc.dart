@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lame_weather/features/location/domain/use_cases/get_location_suggestions.dart';
 import 'package:lame_weather/features/location/presentation/bloc/location_suggestions_state.dart';
