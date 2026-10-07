@@ -37,8 +37,8 @@ class _LocationsState extends State<Locations> {
 
   @override
   Widget build(BuildContext context) {
-    List<Location> locations = GetIt.instance<PreferencesRepository>()
-        .getSavedLocations();
+    var prefsRepo = GetIt.instance<PreferencesRepository>();
+    List<Location> locations = prefsRepo.getSavedLocations();
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -164,6 +164,26 @@ class _LocationsState extends State<Locations> {
                 String pointString = "${point.latitude}, ${point.longitude}";
                 return Dismissible(
                   key: ValueKey(location.name + pointString),
+                  onDismissed: (direction) {
+                    setState(() {
+                      prefsRepo.saveLocations(locations..removeAt(index));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Removed ${location.name}"),
+                          action: SnackBarAction(
+                            label: "Restore",
+                            onPressed: () {
+                              setState(() {
+                                prefsRepo.saveLocations(
+                                  locations..insert(index, location),
+                                );
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    });
+                  },
                   child: ListTile(
                     leading: Icon(Icons.location_city_rounded),
                     title: Text(location.name),
