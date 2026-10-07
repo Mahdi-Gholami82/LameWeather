@@ -1,17 +1,7 @@
-# lame_weather
+# LameWeather
 
-A new Flutter project.
+A simple weather app using [WeatherAPI.com](https://www.weatherapi.com/).
 
-## Getting Started
+> This is an experimental project, do not use it in production
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The API key is stored in a .env file and included as an app asset. This is not secure. Secrets should generally not be stored or embedded directly in client applications, as they can be extracted.
