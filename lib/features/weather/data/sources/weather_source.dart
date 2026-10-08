@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
+import 'package:lame_weather/core/api/api_config.dart';
 import 'package:lame_weather/core/data/models/location.dart';
 import 'package:lame_weather/features/weather/data/models/weather_model.dart';
 
@@ -14,26 +15,17 @@ abstract class WeatherDataSource {
 }
 
 class WeatherDataSourceImpl implements WeatherDataSource {
-  WeatherDataSourceImpl(this.client)
-    : _apiKey =
-          dotenv.env["WEATHER_API_KEY"] ??
-          (throw Exception("WEATHER_API_KEY is not configured"));
+  WeatherDataSourceImpl(this.client);
 
   final Client client;
-  final String host = "api.weatherapi.com";
-  final String version = "v1";
-  final String _apiKey;
-
-  Uri _fromPath(String path, {Map<String, String>? queryParameters}) {
-    return Uri.https(host, "/$version$path", queryParameters);
-  }
+  final apiConfig = GetIt.instance<WeatherApiConfig>();
 
   Future<WeatherModel> _getForecast({required String query}) async {
     final response = await client.get(
-      _fromPath(
+      apiConfig.uri(
         "/forecast.json",
         queryParameters: {
-          "key": _apiKey,
+          "key": apiConfig.key,
           "q": query,
           "days": "4",
           "aqi": "no",
@@ -42,17 +34,14 @@ class WeatherDataSourceImpl implements WeatherDataSource {
       ),
     );
 
-    final json = jsonDecode(response.body);
-
-    if (response.statusCode == 200 && json is Map<String, dynamic>) {
-      return WeatherModel.fromJson(json);
+    if (response.statusCode != 200) {
+      throw Exception(
+        "Failed to load weather: \nStatus: ${response.statusCode} Body: ${response.body}",
+      );
     }
 
-    throw Exception(
-      "Failed to load weather:"
-      "\nStatus: ${response.statusCode}"
-      "\nBody: ${response.body}",
-    );
+    final json = jsonDecode(response.body);
+    return WeatherModel.fromJson(json);
   }
 
   @override
@@ -70,14 +59,17 @@ class WeatherDataSourceImpl implements WeatherDataSource {
     required String search,
   }) async {
     final response = await client.get(
-      _fromPath("/search.json", queryParameters: {"key": _apiKey, "q": search}),
+      apiConfig.uri(
+        "/search.json",
+        queryParameters: {"key": apiConfig.key, "q": search},
+      ),
     );
-    final json = jsonDecode(response.body) as List<dynamic>;
-    if (response.statusCode == 200) {
-      return json.map((e) => LocationModel.fromJson(e)).toList();
+    if (response.statusCode != 200) {
+      throw Exception(
+        "Failed to load weather: \nStatus: ${response.statusCode} Body: ${response.body}",
+      );
     }
-    throw Exception(
-      "Failed to load weather: \nStatus: ${response.statusCode} Body: ${response.body}",
-    );
+    final json = jsonDecode(response.body) as List<dynamic>;
+    return json.map((e) => LocationModel.fromJson(e)).toList();
   }
 }

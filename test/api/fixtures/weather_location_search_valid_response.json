@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1734598,
+        "name": "Lagos",
+        "region": "Lagos",
+        "country": "Nigeria",
+        "lat": 6.45,
+        "lon": 3.4,
+        "url": "lagos-lagos-nigeria"
+    },
+    {
+        "id": 1800925,
+        "name": "Lima",
+        "region": "Lima",
+        "country": "Peru",
+        "lat": -12.05,
+        "lon": -77.05,
+        "url": "lima-lima-peru"
+    },
+    {
+        "id": 2801268,
+        "name": "London",
+        "region": "City of London, Greater London",
+        "country": "United Kingdom",
+        "lat": 51.52,
+        "lon": -0.11,
+        "url": "london-city-of-london-greater-london-united-kingdom"
+    },
+    {
+        "id": 1122691,
+        "name": "Lucknow",
+        "region": "Uttar Pradesh",
+        "country": "India",
+        "lat": 26.85,
+        "lon": 80.92,
+        "url": "lucknow-uttar-pradesh-india"
+    },
+    {
+        "id": 3265157,
+        "name": "Leon",
+        "region": "Guanajuato",
+        "country": "Mexico",
+        "lat": 21.12,
+        "lon": -101.67,
+        "url": "leon-guanajuato-mexico"
+    }
+]

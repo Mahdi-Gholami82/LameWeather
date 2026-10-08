@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
+import 'package:lame_weather/core/api/api_config.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
 import 'package:lame_weather/features/weather/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
@@ -22,6 +23,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 final getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
+  getIt.registerSingleton<WeatherApiConfig>(
+    WeatherApiConfig(
+      host: "api.weatherapi.com",
+      version: "v1",
+      key:
+          dotenv.env["WEATHER_API_KEY"] ??
+          (throw Exception("WEATHER_API_KEY is not configured")),
+    ),
+  );
+
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
   getIt.registerLazySingleton(() => PreferencesDataSource(getIt()));
