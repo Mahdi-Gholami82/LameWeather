@@ -15,7 +15,6 @@ import 'package:lame_weather/features/weather/data/sources/weather_source.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../utils/join_path.dart';
 @GenerateNiceMocks([MockSpec<Client>()])
 import 'api_test.mocks.dart';
 
@@ -26,25 +25,12 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<WeatherApiConfig>(
     WeatherApiConfig(host: "mock.com", version: "v1", key: "mock"),
   );
-  getIt.registerLazySingleton(() => PreferencesDataSource(getIt()));
-  getIt.registerLazySingleton<PreferencesRepository>(
-    () => PreferencesRepositoryImpl(getIt()),
-  );
   getIt.registerSingleton<Client>(
     mockClient,
     dispose: (client) => client.close(),
   );
   getIt.registerLazySingleton<WeatherDataSource>(
     () => WeatherDataSourceImpl(getIt()),
-  );
-  getIt.registerLazySingleton<WeatherRepository>(
-    () => WeatherRepositoryImpl(dataSource: getIt<WeatherDataSource>()),
-  );
-  getIt.registerLazySingleton<LocationDataSource>(
-    () => LocationDataSourceImpl(),
-  );
-  getIt.registerLazySingleton<LocationRepository>(
-    () => LocationRepositoryImpl(getIt<LocationDataSource>()),
   );
 }
 
@@ -53,8 +39,14 @@ void main() {
   final apiConfig = getIt<WeatherApiConfig>();
   var dataSource = getIt<WeatherDataSource>();
 
-  Future<String> getFixture(String name) =>
-      File(joinPaths(["test", "api", "fixtures", name])).readAsString();
+  Future<String> getFixture(String name) => File(
+    [
+      "test",
+      "api",
+      "fixtures",
+      name,
+    ].where((s) => s.isNotEmpty).join(Platform.pathSeparator),
+  ).readAsString();
 
   test("get weather", () async {
     when(

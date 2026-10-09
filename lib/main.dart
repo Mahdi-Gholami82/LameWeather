@@ -22,6 +22,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
+List<BlocProvider> get mainBlocProviders => [
+  BlocProvider<WeatherBloc>(
+    create: (_) => WeatherBloc(
+      getWeatherUseCase: getIt<GetWeatherUseCase>(),
+      getWeatherFromPointUseCase: getIt<GetWeatherFromPointUseCase>(),
+    ),
+  ),
+  BlocProvider<LocationSuggestionsBloc>(
+    create: (_) =>
+        LocationSuggestionsBloc(getIt<GetLocationSuggestionsUseCase>()),
+  ),
+  BlocProvider<LocationBloc>(
+    create: (_) => LocationBloc(getIt<GetCurrentLocationUseCase>()),
+  ),
+];
+
 Future<void> configureDependencies() async {
   getIt.registerSingleton<WeatherApiConfig>(
     WeatherApiConfig(
@@ -58,6 +74,22 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(getIt<LocationDataSource>()),
   );
+  getIt.registerLazySingleton<GetWeatherUseCase>(
+    () => GetWeatherUseCase(repository: getIt<WeatherRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetWeatherFromPointUseCase>(
+    () => GetWeatherFromPointUseCase(repository: getIt<WeatherRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetLocationSuggestionsUseCase>(
+    () => GetLocationSuggestionsUseCase(repository: getIt<WeatherRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetCurrentLocationUseCase>(
+    () => GetCurrentLocationUseCase(getIt<LocationRepository>()),
+  );
+  getIt.registerSingleton<List<BlocProvider>>(mainBlocProviders);
 }
 
 Future<void> main() async {
@@ -72,32 +104,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (BuildContext context) => WeatherBloc(
-            getWeatherUseCase: GetWeatherUseCase(
-              repository: getIt<WeatherRepository>(),
-            ),
-            getWeatherFromPointUseCase: GetWeatherFromPointUseCase(
-              repository: getIt<WeatherRepository>(),
-            ),
-          ),
-        ),
-        BlocProvider(
-          create: (BuildContext context) {
-            return LocationSuggestionsBloc(
-              GetLocationSuggestionsUseCase(
-                repository: getIt<WeatherRepository>(),
-              ),
-            );
-          },
-        ),
-        BlocProvider(
-          create: (context) => LocationBloc(
-            GetCurrentLocationUseCase(getIt<LocationRepository>()),
-          ),
-        ),
-      ],
+      providers: getIt<List<BlocProvider>>(),
       child: MaterialApp(
         title: "Lame Weather",
         theme: ThemeData(
