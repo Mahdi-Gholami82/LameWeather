@@ -140,9 +140,9 @@ class _LocationsPageState extends State<LocationsPage> {
                                     ),
                                     onTap: () {
                                       controller.closeView(location.name);
-                                      _loadPointAndPop(
-                                        context,
-                                        point: location.point,
+                                      Navigator.of(context).pop();
+                                      BlocProvider.of<WeatherBloc>(context).add(
+                                        GetWeatherEvent(location: location),
                                       );
                                     },
                                   ),
