@@ -1,16 +1,19 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
 import 'package:lame_weather/core/domain/entities/location.dart';
 
 abstract class PreferencesRepository {
   List<Location> getSavedLocations();
-
   Future<void> saveLocations(List<Location> locations);
+
+  ThemeMode getThemeMode();
+  Future<void> saveThemeMode(ThemeMode themeMode);
 }
 
 class PreferencesRepositoryImpl implements PreferencesRepository {
-  final PreferencesDataSource dataSource;
+  final PreferencesDataSourceImplImpl dataSource;
 
   PreferencesRepositoryImpl(this.dataSource);
 
@@ -39,4 +42,17 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
           .toList(),
     );
   }
+
+  @override
+  ThemeMode getThemeMode() {
+    String? modeString = dataSource.getThemeMode();
+    return ThemeMode.values.firstWhere(
+      (e) => modeString == e.name,
+      orElse: () => ThemeMode.system,
+    );
+  }
+
+  @override
+  Future<void> saveThemeMode(ThemeMode themeMode) =>
+      dataSource.saveTheme(themeMode.name);
 }

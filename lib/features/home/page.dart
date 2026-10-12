@@ -8,6 +8,8 @@ import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
 import 'package:lame_weather/core/presentation/widgets/shimmer.dart';
 import 'package:lame_weather/core/presentation/theme/text_styles.dart';
+import 'package:lame_weather/features/home/presentation/widgets/drawer.dart';
+import 'package:lame_weather/features/settings/page.dart';
 import 'package:lame_weather/features/weather/domain/entities/daily_forcast.dart';
 import 'package:lame_weather/features/weather/domain/entities/hourly_forecast.dart';
 import 'package:lame_weather/features/weather/domain/entities/weather.dart';
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void pushToLocations(BuildContext context) {
-    Navigator.of(context).pushNamed(Locations.route);
+    Navigator.of(context).pushNamed(LocationsPage.route);
   }
 
   @override
@@ -101,13 +103,8 @@ class _HomePageState extends State<HomePage> {
             dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
           ),
           child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                "Lame Weather",
-                selectionColor: theme.colorScheme.onPrimary,
-              ),
-              backgroundColor: theme.colorScheme.primary,
-            ),
+            drawer: CustomDrawer(),
+            appBar: AppBar(title: Text("Lame Weather")),
             body: SafeArea(
               child: RefreshIndicator(
                 onRefresh: () async {

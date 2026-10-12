@@ -62,7 +62,7 @@ void main() {
       MaterialApp(
         home: MultiBlocProvider(
           providers: getIt<List<BlocProvider>>(),
-          child: Locations(),
+          child: LocationsPage(),
         ),
       ),
     );

@@ -10,15 +10,15 @@ import 'package:lame_weather/features/location/presentation/bloc/location_point_
 import 'package:lame_weather/features/location/presentation/bloc/location_suggestions_bloc.dart';
 import 'package:lame_weather/features/location/presentation/bloc/location_suggestions_state.dart';
 
-class Locations extends StatefulWidget {
-  const Locations({super.key});
+class LocationsPage extends StatefulWidget {
+  const LocationsPage({super.key});
   static const String route = "/locations";
 
   @override
-  State<Locations> createState() => _LocationsState();
+  State<LocationsPage> createState() => _LocationsPageState();
 }
 
-class _LocationsState extends State<Locations> {
+class _LocationsPageState extends State<LocationsPage> {
   var searchController = SearchController();
 
   void _triggerSuggestionRebuild() {

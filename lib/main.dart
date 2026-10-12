@@ -5,6 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:lame_weather/core/api/api_config.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
+import 'package:lame_weather/core/presentation/bloc/theme_bloc.dart';
+import 'package:lame_weather/features/settings/page.dart';
 import 'package:lame_weather/features/weather/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
 import 'package:lame_weather/features/weather/data/sources/weather_source.dart';
@@ -22,22 +24,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
-List<BlocProvider> get mainBlocProviders => [
-  BlocProvider<WeatherBloc>(
-    create: (_) => WeatherBloc(
-      getWeatherUseCase: getIt<GetWeatherUseCase>(),
-      getWeatherFromPointUseCase: getIt<GetWeatherFromPointUseCase>(),
-    ),
-  ),
-  BlocProvider<LocationSuggestionsBloc>(
-    create: (_) =>
-        LocationSuggestionsBloc(getIt<GetLocationSuggestionsUseCase>()),
-  ),
-  BlocProvider<LocationBloc>(
-    create: (_) => LocationBloc(getIt<GetCurrentLocationUseCase>()),
-  ),
-];
-
 Future<void> configureDependencies() async {
   getIt.registerSingleton<WeatherApiConfig>(
     WeatherApiConfig(
@@ -51,7 +37,7 @@ Future<void> configureDependencies() async {
 
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
-  getIt.registerLazySingleton(() => PreferencesDataSource(getIt()));
+  getIt.registerLazySingleton(() => PreferencesDataSourceImplImpl(getIt()));
   getIt.registerLazySingleton<PreferencesRepository>(
     () => PreferencesRepositoryImpl(getIt()),
   );
@@ -89,7 +75,24 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<GetCurrentLocationUseCase>(
     () => GetCurrentLocationUseCase(getIt<LocationRepository>()),
   );
-  getIt.registerSingleton<List<BlocProvider>>(mainBlocProviders);
+  getIt.registerSingleton<List<BlocProvider>>([
+    BlocProvider<WeatherBloc>(
+      create: (_) => WeatherBloc(
+        getWeatherUseCase: getIt<GetWeatherUseCase>(),
+        getWeatherFromPointUseCase: getIt<GetWeatherFromPointUseCase>(),
+      ),
+    ),
+    BlocProvider<LocationSuggestionsBloc>(
+      create: (_) =>
+          LocationSuggestionsBloc(getIt<GetLocationSuggestionsUseCase>()),
+    ),
+    BlocProvider<LocationBloc>(
+      create: (_) => LocationBloc(getIt<GetCurrentLocationUseCase>()),
+    ),
+    BlocProvider<ThemeCubit>(
+      create: (_) => ThemeCubit(getIt<PreferencesRepository>().getThemeMode()),
+    ),
+  ]);
 }
 
 Future<void> main() async {
@@ -105,16 +108,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: getIt<List<BlocProvider>>(),
-      child: MaterialApp(
-        title: "Lame Weather",
-        theme: ThemeData(
-          colorScheme: .fromSeed(
-            seedColor: Colors.deepPurple,
-            brightness: Brightness.dark,
-          ),
-        ),
-        routes: {Locations.route: (context) => Locations()},
-        home: HomePage(),
+      child: Builder(
+        builder: (context) {
+          var themeCubit = BlocProvider.of<ThemeCubit>(context, listen: true);
+          return MaterialApp(
+            title: "Lame Weather",
+            themeMode: themeCubit.state,
+            theme: ThemeData(
+              colorScheme: .fromSeed(
+                seedColor: Colors.deepPurple,
+                brightness: Brightness.light,
+              ),
+            ),
+            darkTheme: ThemeData(
+              colorScheme: .fromSeed(
+                seedColor: Colors.deepPurple,
+                brightness: Brightness.dark,
+              ),
+            ),
+            routes: {
+              LocationsPage.route: (context) => LocationsPage(),
+              SettingsPage.route: (context) => SettingsPage(),
+            },
+            home: HomePage(),
+          );
+        },
       ),
     );
   }
