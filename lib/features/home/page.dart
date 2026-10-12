@@ -104,7 +104,10 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Scaffold(
             drawer: CustomDrawer(),
-            appBar: AppBar(title: Text("Lame Weather")),
+            appBar: AppBar(
+              title: Text("Lame Weather"),
+              backgroundColor: Colors.transparent,
+            ),
             body: SafeArea(
               child: RefreshIndicator(
                 onRefresh: () async {

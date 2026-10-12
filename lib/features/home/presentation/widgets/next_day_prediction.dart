@@ -20,7 +20,10 @@ class NextDayPrediction extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return DefaultTextStyle(
-      style: const TextStyle(fontWeight: FontWeight.w500),
+      style: TextStyle(
+        fontWeight: FontWeight.w500,
+        color: colorScheme.onSurface,
+      ),
       child: Row(
         spacing: 10,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

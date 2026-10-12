@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:lame_weather/core/api/api_config.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
 import 'package:lame_weather/core/presentation/bloc/theme_bloc.dart';
+import 'package:lame_weather/core/presentation/theme/custom_themes.dart';
 import 'package:lame_weather/features/settings/page.dart';
 import 'package:lame_weather/features/weather/data/repositories/weather_repository.dart';
 import 'package:lame_weather/core/data/sources/preferances_source.dart';
@@ -114,18 +115,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: "Lame Weather",
             themeMode: themeCubit.state,
-            theme: ThemeData(
-              colorScheme: .fromSeed(
-                seedColor: Colors.deepPurple,
-                brightness: Brightness.light,
-              ),
-            ),
-            darkTheme: ThemeData(
-              colorScheme: .fromSeed(
-                seedColor: Colors.deepPurple,
-                brightness: Brightness.dark,
-              ),
-            ),
+            theme: CustomAppTheme.light,
+            darkTheme: CustomAppTheme.dark,
             routes: {
               LocationsPage.route: (context) => LocationsPage(),
               SettingsPage.route: (context) => SettingsPage(),

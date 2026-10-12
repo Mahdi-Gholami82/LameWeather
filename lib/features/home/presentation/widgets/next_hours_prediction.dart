@@ -45,7 +45,9 @@ class NextHoursPrediction extends StatelessWidget {
         SizedBox(height: 20),
         Expanded(
           child: VerticalGradiantBar(
-            background: colorScheme.onPrimary,
+            background: colorScheme.brightness == Brightness.dark
+                ? colorScheme.onPrimary
+                : colorScheme.inversePrimary.withAlpha(180),
             foreground: colorScheme.primary,
             width: 12,
             radius: Radius.circular(10),
