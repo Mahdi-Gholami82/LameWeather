@@ -16,7 +16,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    var themeCubit = BlocProvider.of<ThemeCubit>(context, listen: true);
+    var themeCubit = BlocProvider.of<ThemeCubit>(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

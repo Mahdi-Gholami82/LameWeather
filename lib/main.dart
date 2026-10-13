@@ -109,12 +109,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: getIt<List<BlocProvider>>(),
-      child: Builder(
-        builder: (context) {
-          var themeCubit = BlocProvider.of<ThemeCubit>(context, listen: true);
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
           return MaterialApp(
             title: "Lame Weather",
-            themeMode: themeCubit.state,
+            themeMode: themeMode,
             theme: CustomAppTheme.light,
             darkTheme: CustomAppTheme.dark,
             routes: {
