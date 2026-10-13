@@ -173,11 +173,12 @@ class _LocationsPageState extends State<LocationsPage> {
                           action: SnackBarAction(
                             label: "Restore",
                             onPressed: () {
-                              setState(() {
-                                prefsRepo.saveLocations(
-                                  locations..insert(index, location),
-                                );
-                              });
+                              prefsRepo.saveLocations(
+                                locations..insert(index, location),
+                              );
+                              if (context.mounted) {
+                                setState(() {});
+                              }
                             },
                           ),
                         ),
