@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    "Failed to fetch weather : ${error.message}",
+                    "Failed to fetch weather",
                     style: TextStyle(color: theme.colorScheme.onErrorContainer),
                   ),
                   backgroundColor: theme.colorScheme.errorContainer,
