@@ -35,6 +35,13 @@ class _LocationsPageState extends State<LocationsPage> {
     ).add(GetWeatherFromPointEvent(point: point));
   }
 
+  void _loadLocationAndPop(BuildContext context, {required Location location}) {
+    Navigator.of(context).pop();
+    BlocProvider.of<WeatherBloc>(
+      context,
+    ).add(GetWeatherEvent(location: location));
+  }
+
   @override
   Widget build(BuildContext context) {
     var prefsRepo = GetIt.instance<PreferencesRepository>();
@@ -113,6 +120,11 @@ class _LocationsPageState extends State<LocationsPage> {
                                       ).state
                                       is WeatherLoaded) {
                                     Navigator.of(context).pop();
+                                  } else if (locations.isNotEmpty) {
+                                    _loadLocationAndPop(
+                                      context,
+                                      location: locations.first,
+                                    );
                                   }
                                 },
                                 icon: Icon(Icons.arrow_back_outlined),
@@ -140,9 +152,9 @@ class _LocationsPageState extends State<LocationsPage> {
                                     ),
                                     onTap: () {
                                       controller.closeView(location.name);
-                                      Navigator.of(context).pop();
-                                      BlocProvider.of<WeatherBloc>(context).add(
-                                        GetWeatherEvent(location: location),
+                                      _loadLocationAndPop(
+                                        context,
+                                        location: location,
                                       );
                                     },
                                   ),
