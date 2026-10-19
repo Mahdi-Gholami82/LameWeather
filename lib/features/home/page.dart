@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
-import 'package:lame_weather/core/presentation/widgets/shimmer.dart';
 import 'package:lame_weather/core/presentation/theme/text_styles.dart';
 import 'package:lame_weather/features/home/presentation/widgets/drawer.dart';
 import 'package:lame_weather/features/settings/page.dart';
@@ -22,6 +21,7 @@ import 'package:lame_weather/features/home/presentation/widgets/next_hours_predi
 import 'package:lame_weather/features/home/utils/is_day_time.dart';
 import 'package:lame_weather/features/home/utils/week_day_formatter.dart';
 import 'package:lame_weather/features/location/page.dart';
+import 'package:shimmer_builder/shimmer_builder.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -116,8 +116,9 @@ class _HomePageState extends State<HomePage> {
                     await _getWeatherCompleter?.future;
                   }
                 },
-                child: EnableShimmerInherited(
-                  enableShimmer: loading,
+                child: Shimmer(
+                  enable: loading,
+                  duration: Duration(seconds: 2),
                   child: CustomScrollView(
                     controller: scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -139,12 +140,12 @@ class _HomePageState extends State<HomePage> {
                                           CrossAxisAlignment.start,
                                       spacing: 20,
                                       children: [
-                                        ShimmerText(
-                                          childBuilder: () => Text(
+                                        ShimmerBuilder(
+                                          childBuilder: (_) => Text(
                                             "${weather!.current.temperature}°",
                                             style: AppTextStyles.temperature,
                                           ),
-                                          sampleBuilder: () => Text(
+                                          sampleBuilder: (_) => Text(
                                             "68°",
                                             style: AppTextStyles.temperature
                                                 .copyWith(
@@ -152,13 +153,13 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                           ),
                                         ),
-                                        ShimmerText(
-                                          childBuilder: () => Text(
+                                        ShimmerBuilder(
+                                          childBuilder: (_) => Text(
                                             weather!.current.condition.text,
                                             style:
                                                 AppTextStyles.weatherCondition,
                                           ),
-                                          sampleBuilder: () => Text(
+                                          sampleBuilder: (_) => Text(
                                             "Clear",
                                             style: AppTextStyles
                                                 .weatherCondition
@@ -179,14 +180,14 @@ class _HomePageState extends State<HomePage> {
                                                 TextSpan(
                                                   children: [
                                                     WidgetSpan(
-                                                      child: ShimmerText(
-                                                        childBuilder: () =>
+                                                      child: ShimmerBuilder(
+                                                        childBuilder: (_) =>
                                                             Text(
                                                               weather!
                                                                   .location
                                                                   .name,
                                                             ),
-                                                        sampleBuilder: () =>
+                                                        sampleBuilder: (_) =>
                                                             Text(
                                                               "***********",
                                                               style: TextStyle(
@@ -216,12 +217,12 @@ class _HomePageState extends State<HomePage> {
                                                 style: AppTextStyles.location,
                                               ),
                                             ),
-                                            ShimmerText(
-                                              childBuilder: () => Text(
+                                            ShimmerBuilder(
+                                              childBuilder: (_) => Text(
                                                 "Feels like ${weather!.current.feelsLike}°",
                                                 style: AppTextStyles.secondary,
                                               ),
-                                              sampleBuilder: () => Text(
+                                              sampleBuilder: (_) => Text(
                                                 "Feels like 55°",
                                                 style: AppTextStyles.secondary
                                                     .copyWith(
@@ -241,8 +242,8 @@ class _HomePageState extends State<HomePage> {
                                   child: FittedBox(
                                     child: Padding(
                                       padding: const EdgeInsets.all(20),
-                                      child: DefaultShimmer(
-                                        childBuilder: () => Icon(
+                                      child: ShimmerBuilder(
+                                        childBuilder: (_) => Icon(
                                           getWeatherIconFromCondition(
                                             weather!.current.condition.type,
                                             isDay: isDaytime(
@@ -251,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           size: 130,
                                         ),
-                                        sampleBuilder: () => Container(
+                                        sampleBuilder: (_) => Container(
                                           width: 200,
                                           height: 200,
                                           decoration: BoxDecoration(
@@ -277,12 +278,10 @@ class _HomePageState extends State<HomePage> {
                           vertical: 10,
                         ),
                         sliver: SliverToBoxAdapter(
-                          child: DefaultShimmer(
-                            sampleBuilder: () => ShimmerContainer(
-                              width: double.infinity,
-                              height: 300,
-                            ),
-                            childBuilder: () {
+                          child: ShimmerBuilder(
+                            sampleBuilder: (_) =>
+                                SizedBox(width: double.infinity, height: 300),
+                            childBuilder: (_) {
                               var dailyPredictionListController =
                                   ScrollController();
                               return Container(
@@ -360,13 +359,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                           sliver: SliverPadding(
                             padding: EdgeInsets.all(loading ? 0 : 25),
-                            sliver: DefaultShimmer(
-                              isSliver: true,
-                              sampleBuilder: () => const ShimmerContainer(
+                            sliver: ShimmerBuilder(
+                              wrapWithSliverToBoxAdapter: true,
+                              sampleBuilder: (_) => const SizedBox(
                                 height: 150,
                                 width: double.infinity,
                               ),
-                              childBuilder: () => SliverList.builder(
+                              childBuilder: (_) => SliverList.builder(
                                 itemCount: weather!.dailyForecast.length,
                                 itemBuilder: (context, index) {
                                   final DailyForecast currentForecast =

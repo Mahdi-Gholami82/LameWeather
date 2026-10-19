@@ -36,12 +36,15 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.6.0
   flutter_bloc: ^9.1.1
-  shimmer: ^4.0.0
   flutter_dotenv: ^6.0.1
   stream_transform: ^2.1.2
   get_it: ^9.3.0
   shared_preferences: ^2.5.5
   geolocator: ^14.1.1
+  shimmer_builder:
+    git:
+      url: https://github.com/Mahdi-Gholami82/shimmer_builder
+      ref: v0.1.0
   
 dev_dependencies:
   mockito: ^5.7.0
