@@ -8,7 +8,6 @@ import 'package:lame_weather/core/domain/entities/location.dart';
 import 'package:lame_weather/core/data/repositories/preferances_repository.dart';
 import 'package:lame_weather/core/presentation/theme/text_styles.dart';
 import 'package:lame_weather/features/home/presentation/widgets/drawer.dart';
-import 'package:lame_weather/features/settings/page.dart';
 import 'package:lame_weather/features/weather/domain/entities/daily_forcast.dart';
 import 'package:lame_weather/features/weather/domain/entities/hourly_forecast.dart';
 import 'package:lame_weather/features/weather/domain/entities/weather.dart';
@@ -67,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     return BlocConsumer<WeatherBloc, WeatherState>(
       listener: (BuildContext context, WeatherState weatherState) {
         switch (weatherState) {
-          case WeatherError error:
+          case WeatherError _:
             {
               pushToLocations(context);
               ScaffoldMessenger.of(context).showSnackBar(
