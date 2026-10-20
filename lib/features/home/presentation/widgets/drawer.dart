@@ -29,7 +29,6 @@ class CustomDrawer extends StatelessWidget {
     ];
     return Drawer(
       shape: LinearBorder(),
-      backgroundColor: colorScheme.surfaceContainer,
       child: ListView.separated(
         itemCount: children.length,
         itemBuilder: (context, index) => children[index],

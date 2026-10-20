@@ -38,6 +38,7 @@ abstract class CustomAppTheme {
       surfaceTint: Color(0xFF7356A8),
     ),
     scaffoldBackgroundColor: const Color(0xFFF0EEF5),
+    drawerTheme: DrawerThemeData(backgroundColor: const Color(0xFFF0EEF5)),
   );
 
   static final ThemeData dark = ThemeData(
@@ -75,5 +76,6 @@ abstract class CustomAppTheme {
       surfaceTint: Color(0xFFB6A0E8),
     ),
     scaffoldBackgroundColor: const Color(0xFF19191F),
+    drawerTheme: DrawerThemeData(backgroundColor: const Color(0xFF19191F)),
   );
 }

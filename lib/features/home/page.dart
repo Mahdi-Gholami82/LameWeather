@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
-                                  flex: 2,
+                                  flex: 3,
                                   child: FittedBox(
                                     child: Column(
                                       crossAxisAlignment:
