@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
-class CustomScrollBar extends StatefulWidget {
-  const CustomScrollBar({
+class CustomHorizontalScrollBar extends StatefulWidget {
+  const CustomHorizontalScrollBar({
     super.key,
     required this.scrollController,
     this.width = 30,
     this.height = 10,
     this.color,
-    this.radius = const Radius.circular(5),
+    this.radius,
   });
   final ScrollController scrollController;
   final Color? color;
-  final Radius radius;
+  final BorderRadius? radius;
   final double height;
   final double width;
   @override
-  State<CustomScrollBar> createState() => _CustomScrollBarState();
+  State<CustomHorizontalScrollBar> createState() =>
+      _CustomHorizontalScrollBarState();
 }
 
-class _CustomScrollBarState extends State<CustomScrollBar> {
+class _CustomHorizontalScrollBarState extends State<CustomHorizontalScrollBar> {
   double offset = 0;
+  double dragStartOffset = 0;
+  double dragStartMouseX = 0;
 
   void update() {
     setState(() {
@@ -44,7 +47,7 @@ class _CustomScrollBarState extends State<CustomScrollBar> {
   }
 
   @override
-  void didUpdateWidget(covariant CustomScrollBar oldWidget) {
+  void didUpdateWidget(covariant CustomHorizontalScrollBar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.scrollController != widget.scrollController) {
@@ -59,54 +62,56 @@ class _CustomScrollBarState extends State<CustomScrollBar> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size.fromHeight(widget.height),
-      painter: CustomScrollBarPainter(
-        scrollOffset: offset,
-        color: widget.color ?? Theme.of(context).colorScheme.primaryContainer,
-        radius: widget.radius,
-        barHeight: widget.height,
-        barWidth: widget.width,
-      ),
+    return LayoutBuilder(
+      builder: (context, constaints) {
+        double width = constaints.maxWidth;
+        return SizedBox(
+          width: double.infinity,
+          child: Align(
+            alignment: AlignmentGeometry.centerStart,
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(
+                start:
+                    offset * (width - widget.width).clamp(0.0, double.infinity),
+              ),
+              child: GestureDetector(
+                onHorizontalDragStart: (details) {
+                  dragStartMouseX = details.globalPosition.dx;
+                  dragStartOffset = offset;
+                },
+                onHorizontalDragUpdate: (details) {
+                  final maxMouseOffset = context.size!.width - widget.width;
+
+                  if (maxMouseOffset <= 0) return;
+
+                  final delta = details.globalPosition.dx - dragStartMouseX;
+
+                  final newOffset = (dragStartOffset + delta / maxMouseOffset)
+                      .clamp(0.0, 1.0);
+
+                  var scrollPosition = widget.scrollController.position;
+                  widget.scrollController.jumpTo(
+                    scrollPosition.minScrollExtent +
+                        newOffset *
+                            (scrollPosition.maxScrollExtent -
+                                scrollPosition.minScrollExtent),
+                  );
+                },
+                child: Container(
+                  width: widget.width,
+                  height: widget.height,
+                  decoration: BoxDecoration(
+                    color:
+                        widget.color ??
+                        Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: widget.radius ?? BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
-}
-
-class CustomScrollBarPainter extends CustomPainter {
-  CustomScrollBarPainter({
-    required this.scrollOffset,
-    required this.color,
-    required this.radius,
-    required this.barHeight,
-    required this.barWidth,
-  });
-  final double scrollOffset;
-  final Color color;
-  final Radius radius;
-  final double barHeight;
-  final double barWidth;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    assert(0 <= scrollOffset && scrollOffset <= 1.0);
-    final paint = Paint()..color = color;
-    final double halfHeight = size.height / 2;
-    final double halfBarHeight = barHeight / 2;
-    final double halfBarWidth = barWidth / 2;
-    final double centerX =
-        halfBarWidth + (size.width - barWidth) * scrollOffset;
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromLTRB(
-        centerX - halfBarWidth,
-        halfHeight - halfBarHeight,
-        centerX + halfBarWidth,
-        halfHeight + halfBarHeight,
-      ),
-      radius,
-    );
-    canvas.drawRRect(rect, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

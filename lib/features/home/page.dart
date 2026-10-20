@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                                         horizontal: 15,
                                         vertical: 15,
                                       ),
-                                      child: CustomScrollBar(
+                                      child: CustomHorizontalScrollBar(
                                         scrollController:
                                             dailyPredictionListController,
                                         color:
